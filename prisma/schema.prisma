@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Siswa{
+  id                    Int         @id @default(autoincrement())
+  nama_lengkap          String
+  kelas                 String
+  email                 String      
+  password              String
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  //relasi
+  tugas                 Tugas[]
+  avatar                avatar?
+
+}
+
+model avatar{
+  id                    Int         @id @default(autoincrement())
+  filename              String
+  image_path            String
+  siswa_id              Int
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  //relasi
+  siswa                 Siswa       @relation(fields: [siswa_id], references: [id])
+}
+
+model Tugas{
+  id                    Int         @id @default(autoincrement())
+  nama_pelajaran        String
+  kelas                 String
+  siswa_id              Int
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  //relasi
+  siswa                 Siswa       @relation(fields: [siswa_id], references: [id])
+
+  photo_tugas           Photo_Tugas?
+}
+
+model Photo_Tugas{
+  id                    Int         @id @default(autoincrement())
+  filename              String
+  image_path            String
+  tugas_id              Int
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  //relasi
+  tugas                 Tugas       @relation(fields: [tugas_id], references: [id])
+
+}
